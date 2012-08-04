@@ -43,7 +43,7 @@
           FB.getLoginStatus(function(res){
             $("loadingDiv").style.display = 'none';
           	if( res.status === 'connected'){
-          		document.getElementById('beforeLogin').style.display = 'none';
+          		document.getElementById('afterLogin').style.display = 'block';
           		FB.api('/me', function(user) {
 		            if (user) {
 		              var image = document.getElementById('userIcon');
@@ -71,9 +71,9 @@
                   }
                 });
           	}else if(res.status === 'not_authorized'){
-          		document.getElementById('afterLogin').style.display = 'none';
+          		document.getElementById('beforeLogin').style.display = 'block';
           	}else{
-          		document.getElementById('afterLogin').style.display = 'none';
+          		document.getElementById('beforeLogin').style.display = 'block';
           	}
           });
         };
