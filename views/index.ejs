@@ -4,21 +4,13 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script type="text/javascript">
-    	window.fbAsyncInit = function() {
+    	 window.fbAsyncInit = function() {
           FB.init({
-            appId      : 'fbchat', // App ID
-            channelUrl : '//fbchat.lazygyu.net', // Channel File
+            appId      : 'YOUR_APP_ID', // App ID
+            channelUrl : '//WWW.YOUR_DOMAIN.COM/channel.html', // Channel File
             status     : true, // check login status
             cookie     : true, // enable cookies to allow the server to access the session
             xfbml      : true  // parse XFBML
-          });
-          FB.api('/me', function(user) {
-            if (user) {
-              var image = document.getElementById('image');
-              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
-              var name = document.getElementById('name');
-              name.innerHTML = user.name
-            }
           });
         };
         // Load the SDK Asynchronously
