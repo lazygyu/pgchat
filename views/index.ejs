@@ -41,6 +41,7 @@
           
 
           FB.getLoginStatus(function(res){
+            $("loadingDiv").style.display = 'none';
           	if( res.status === 'connected'){
           		document.getElementById('beforeLogin').style.display = 'none';
           		FB.api('/me', function(user) {
@@ -88,16 +89,19 @@
   </head>
   <body>
     <h1>Facebook group chat for pg</h1>
+    <div id="loadingDiv">
+      <h2>로딩중입니다...</h2>
+    </div>
     <div id="beforeLogin">
 	    <p>페이스북 그룹 채팅입니다.</p>
 	    <p>아래 버튼을 눌러 로그인 해 주세요</p>
 	    <div class="fb-login-button" scope='user_groups'>Facebook 로그인하기</div>
-	</div>
-	<div id="afterLogin">
-		<p><img id="userIcon" /> <span id="username"></span></p>
-		<p>채팅방에 입장하시려면 원하는 그룹을 선택하세요</p>
-    <ul id="groupList">
-    </ul>
-	</div>
+  	</div>
+  	<div id="afterLogin">
+  		<p><img id="userIcon" /> <span id="username"></span></p>
+  		<p>채팅방에 입장하시려면 원하는 그룹을 선택하세요</p>
+      <ul id="groupList">
+      </ul>
+  	</div>
   </body>
 </html>
