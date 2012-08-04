@@ -11,7 +11,10 @@
           if( opt ){
             for(var i in opt){
               if( opt.hasOwnProperty(i) )
-                tmp.setAttribute(i, opt[i]);
+                if( i == "class" || i == "className" )
+                  tmp.className = opt[i];
+                else
+                  tmp.setAttribute(i, opt[i]);
             }
           }
 
