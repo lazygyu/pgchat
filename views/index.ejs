@@ -24,6 +24,7 @@
 		              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
 		              var name = document.getElementById('username');
 		              name.innerHTML = user.name
+                  console.dir(user);
 		            }
 		        });
           	}else if(res.status === 'not_authorized'){
