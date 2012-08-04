@@ -5,6 +5,31 @@
 		<link rel='stylesheet' href='/stylesheets/style.css' />
 		<script type="text/javascript">
 
+			var members = [];
+
+			function makeEl(tag, opt, cont){
+	          var tmp = document.createElement(tag);
+	          if( opt ){
+	            for(var i in opt){
+	              if( opt.hasOwnProperty(i) )
+	                if( i == "class" || i == "className" )
+	                  tmp.className = opt[i];
+	                else
+	                  tmp.setAttribute(i, opt[i]);
+	            }
+	          }
+
+	          if( cont ){
+	            tmp.innerHTML = cont;
+	          }
+
+	          return tmp;
+	        }
+
+	        function $(oid){
+	          return document.getElementById(oid);
+	        }
+
 			window.fbAsyncInit = function() {
 	          FB.init({
 	            appId      : '330600707030353', // App ID
@@ -30,20 +55,12 @@
 	              FB.api( 
 	                {
 	                  method: 'fql.query', 
-	                  query: 'SELECT gid, name, description, creator, icon FROM group WHERE gid IN (SELECT gid FROM group_member WHERE uid = me())'
+	                  query: 'SELECT gid, uid FROM group_member WHERE gid = <%= gid %>' 
 	                }, 
 	                function(response) { 
-	                  var glist = $("groupList");
-	                  for(var i=0; i < response.length; i++){
-	                    console.log(response[i].name);
-	                    groups.push(response[i]);
-	                    var lic = makeEl("li", {"rel":response[i].gid});
-	                    var li = makeEl("a", {"href":"/chat/" + response[i].gid});
-	                    lic.appendChild(li);
-	                    li.appendChild( makeEl("img", {"className":"groupIcon", "src":response[i].icon}) );
-	                    li.appendChild( makeEl("span", {"className":"groupTitle"}, response[i].name));
-	                    li.appendChild( makeEl("span", {"className":"groupDesc"}, response[i].description));
-	                    glist.appendChild(lic);
+	                  for(var i=0,l=response.length;i<l;i++){
+	                  	members.push(response[i]);
+	                  	makeEl
 	                  }
 	                });
 	          	}else if(res.status === 'not_authorized'){
@@ -63,7 +80,20 @@
 	           ref.parentNode.insertBefore(js, ref);
 	         }(document));
 		</script>
+		<script type="text/javascript" src="/now.js"></script>
 	</head>
 	<body>
+		<h1 id="groupTitle">Group</h1>
+		<div id="groupInfo">
+			<p id="groupDescription"></p>
+			회원 수 : <span id="groupMemberCount">0</span><br />
+		</div>
+		<ul id="memberList">
+		</ul>
+		<div id="chatContainer"></div>
+		<div id="inputContainer">
+			<img id="userIcon" />
+			<textarea id="userInput"></textarea>
+		</div>
 	</body>
 </html>
