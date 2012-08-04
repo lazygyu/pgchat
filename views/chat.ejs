@@ -40,7 +40,6 @@
 	          });
 
 	          FB.getLoginStatus(function(res){
-	            $("loadingDiv").style.display = 'none';
 	          	if( res.status === 'connected'){
 	          		document.getElementById('afterLogin').style.display = 'block';
 	          		FB.api('/me', function(user) {
