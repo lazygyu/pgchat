@@ -57,11 +57,12 @@
                 function(response) { 
                   var glist = $("groupList");
                   for(var i=0; i < response.length; i++){
+                    console.log(response[i].name);
                     groups.push(response[i]);
                     var li = makeEl("li", {}, response.name);
                     glist.appendChild(li);
-                }
-              });
+                  }
+                });
           	}else if(res.status === 'not_authorized'){
           		document.getElementById('afterLogin').style.display = 'none';
           	}else{
