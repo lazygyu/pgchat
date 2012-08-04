@@ -7,7 +7,7 @@
     	 window.fbAsyncInit = function() {
           FB.init({
             appId      : '330600707030353', // App ID
-            channelUrl : '/fbchat.lazygyu.net', // Channel File
+            channelUrl : '/fbchat.lazygyu.net/html/channel.html', // Channel File
             status     : true, // check login status
             cookie     : true, // enable cookies to allow the server to access the session
             xfbml      : true  // parse XFBML
@@ -20,6 +20,16 @@
               var name = document.getElementById('username');
               name.innerHTML = user.name
             }
+          });
+
+          FB.getLoginStatus(function(res){
+          	if( res.status === 'connected'){
+          		document.getElementById('beforeLogin').style.display = 'none';
+          	}else if(res.status === 'not_authorized'){
+          		document.getElementById('beforeLogin').style.display = 'none';
+          	}else{
+          		document.getElementById('afterLogin').style.display = 'none';
+          	}
           });
         };
         // Load the SDK Asynchronously
