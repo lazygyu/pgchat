@@ -3,6 +3,20 @@ body
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
 a
   color: #00B7FF
-.groupIcon { width:2em; height:2em; float:left; }
-.groupTitle { display:block; float:right; font-weight:bold; }
-.groupDesc { display:block; float:right; }
+
+#groupList
+  list-style:none
+
+#groupList>li
+  border:solid 1px transparent
+#groupList>li:hover
+  border:solid 1px gray
+  background:#eee
+
+.groupIcon 
+  width:16px
+  height:16px
+.groupTitle 
+  font-weight:bold
+.groupDesc
+  display:block;
