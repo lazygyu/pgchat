@@ -38,8 +38,6 @@
             xfbml      : true  // parse XFBML
           });
 
-          
-
           FB.getLoginStatus(function(res){
             $("loadingDiv").style.display = 'none';
           	if( res.status === 'connected'){
@@ -63,11 +61,13 @@
                   for(var i=0; i < response.length; i++){
                     console.log(response[i].name);
                     groups.push(response[i]);
-                    var li = makeEl("li");
+                    var lic = makeEl("li", {"rel":response[i].gid});
+                    var li = makeEl("a", {"href":"/chat/" + response[i].gid});
+                    lic.appendChild(li);
                     li.appendChild( makeEl("img", {"className":"groupIcon", "src":response[i].icon}) );
                     li.appendChild( makeEl("span", {"className":"groupTitle"}, response[i].name));
                     li.appendChild( makeEl("span", {"className":"groupDesc"}, response[i].description));
-                    glist.appendChild(li);
+                    glist.appendChild(lic);
                   }
                 });
           	}else if(res.status === 'not_authorized'){
