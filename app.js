@@ -8,11 +8,14 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+var nowjs = require('now');
+
 var app = express();
 
 app.configure(function(){
   app.set('port', 3433);
   app.set('views', __dirname + '/views');
+  app.set('lib', __dirname + '/lib');
   app.set('view engine', 'ejs');
   app.use(express.favicon());
   app.use(express.logger('dev'));
