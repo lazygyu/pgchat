@@ -12,6 +12,15 @@
             cookie     : true, // enable cookies to allow the server to access the session
             xfbml      : true  // parse XFBML
           });
+
+          FB.api('/me', function(user) {
+            if (user) {
+              var image = document.getElementById('userIcon');
+              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
+              var name = document.getElementById('username');
+              name.innerHTML = user.name
+            }
+          });
         };
         // Load the SDK Asynchronously
         (function(d){
@@ -25,8 +34,14 @@
   </head>
   <body>
     <h1>Facebook group chat for pg</h1>
-    <p>페이스북 그룹 채팅입니다.</p>
-    <p>아래 버튼을 눌러 로그인 해 주세요</p>
-    <div class="fb-login-button">Facebook 로그인하기</div>
+    <div id="beforeLogin">
+	    <p>페이스북 그룹 채팅입니다.</p>
+	    <p>아래 버튼을 눌러 로그인 해 주세요</p>
+	    <div class="fb-login-button">Facebook 로그인하기</div>
+	</div>
+	<div id="afterLogin">
+		<p><img id="userIcon" /> <span id="username"></span></p>
+		<p>채팅방에 입장하시려면 원하는 그룹을 선택하세요</p>
+	</div>
   </body>
 </html>
