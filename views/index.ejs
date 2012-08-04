@@ -4,6 +4,28 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script type="text/javascript">
+        var groups = [];
+
+        function makeEl(tag, opt, cont){
+          var tmp = document.createElement(tag);
+          if( opt ){
+            for(var i in opt){
+              if( opt.hasOwnProperty(i) )
+                tmp.setAttribute(i, opt[i]);
+            }
+          }
+
+          if( cont ){
+            tmp.innerHTML = cont;
+          }
+
+          return tmp;
+        }
+
+        function $(oid){
+          return document.getElementById(oid);
+        }
+
     	 window.fbAsyncInit = function() {
           FB.init({
             appId      : '330600707030353', // App ID
@@ -26,7 +48,20 @@
 		              name.innerHTML = user.name
                   console.dir(user);
 		            }
-		        });
+		          });
+              FB.api( 
+                {
+                  method: 'fql.query', 
+                  query: 'SELECT gid, name, description, creator, icon FROM group WHERE gid IN (SELECT gid FROM group_member WHERE uid = me())'
+                }, 
+                function(response) { 
+                  var glist = $("grouplist");
+                  for(var i=0; i < response.length; i++){
+                    groups.push(response[i]);
+                    var li = makeEl("li", {}, response.name);
+                    glist.appendChild(li);
+                }
+              });
           	}else if(res.status === 'not_authorized'){
           		document.getElementById('afterLogin').style.display = 'none';
           	}else{
@@ -54,6 +89,8 @@
 	<div id="afterLogin">
 		<p><img id="userIcon" /> <span id="username"></span></p>
 		<p>채팅방에 입장하시려면 원하는 그룹을 선택하세요</p>
+    <ul id="groupList">
+    </ul>
 	</div>
   </body>
 </html>
