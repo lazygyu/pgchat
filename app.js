@@ -26,7 +26,6 @@ app.configure(function(){
   app.use(app.router);
   app.use(require('stylus').middleware(__dirname + '/public'));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.param('group', /^\d+$/);
 });
 
 app.configure('development', function(){
@@ -34,6 +33,7 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
+app.param('group', /^\d+$/);
 app.get("/chat/:group", routes.chat);
 
 http.createServer(app).listen(app.get('port'), function(){
