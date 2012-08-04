@@ -55,7 +55,7 @@
                   query: 'SELECT gid, name, description, creator, icon FROM group WHERE gid IN (SELECT gid FROM group_member WHERE uid = me())'
                 }, 
                 function(response) { 
-                  var glist = $("grouplist");
+                  var glist = $("groupList");
                   for(var i=0; i < response.length; i++){
                     groups.push(response[i]);
                     var li = makeEl("li", {}, response.name);
