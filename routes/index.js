@@ -4,9 +4,9 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'FacebookGroupChat' });
 };
 
 exports.chat = function(req, res){
-	res.render('chat', { gid:req.params.group });
+	res.render('chat', { gid:req.params.group, title:'FacebookGroupChat' });
 }
