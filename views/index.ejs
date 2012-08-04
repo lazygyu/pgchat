@@ -13,20 +13,21 @@
             xfbml      : true  // parse XFBML
           });
 
-          FB.api('/me', function(user) {
-            if (user) {
-              var image = document.getElementById('userIcon');
-              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
-              var name = document.getElementById('username');
-              name.innerHTML = user.name
-            }
-          });
+          
 
           FB.getLoginStatus(function(res){
           	if( res.status === 'connected'){
           		document.getElementById('beforeLogin').style.display = 'none';
+          		FB.api('/me', function(user) {
+		            if (user) {
+		              var image = document.getElementById('userIcon');
+		              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
+		              var name = document.getElementById('username');
+		              name.innerHTML = user.name
+		            }
+		        });
           	}else if(res.status === 'not_authorized'){
-          		document.getElementById('beforeLogin').style.display = 'none';
+          		document.getElementById('afterLogin').style.display = 'none';
           	}else{
           		document.getElementById('afterLogin').style.display = 'none';
           	}
