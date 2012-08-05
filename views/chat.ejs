@@ -162,25 +162,27 @@
 	           js.src = "//connect.facebook.net/en_US/all.js";
 	           ref.parentNode.insertBefore(js, ref);
 	         }(document));
-
-	        now.ready(function(){
-	        	now.enter('<%= gid %>');
-	        	now.recieveMsg = function(uid, msg){
-	        		var mem = members[uid];
-	        		if(!mem) return;
-	        		var cont = makeEl('p', {'class':'chatMessage'});
-	        		var img = makeEl('img', {'src':mem.picture});
-	        		var nm = makeEl('span', {'class':'username'}, mem.name);
-	        		var message = makeEl('div', {'class':'chatMessage'}, msg.replace(/\</g, "&lt;"));
-	        		cont.appendChild(img);
-	        		cont.appendChild(nm);
-	        		cont.appendChild(message);
-	        		var ch = $("chatContainer");
-	        		ch.appendChild(cont);
-	        	}
-	        });
 		</script>
 		<script type="text/javascript" src="http://fbchat.lazygyu.net:3433/nowjs/now.js"></script>
+		<script type="text/javascript">
+			now.recieveMsg = function(uid, msg){
+        		var mem = members[uid];
+        		if(!mem) return;
+        		var cont = makeEl('p', {'class':'chatMessage'});
+        		var img = makeEl('img', {'src':mem.picture});
+        		var nm = makeEl('span', {'class':'username'}, mem.name);
+        		var message = makeEl('div', {'class':'chatMessage'}, msg.replace(/\</g, "&lt;"));
+        		cont.appendChild(img);
+        		cont.appendChild(nm);
+        		cont.appendChild(message);
+        		var ch = $("chatContainer");
+        		ch.appendChild(cont);
+        	}
+	        now.ready(function(){
+	        	now.enter('<%= gid %>');
+	        	
+	        });
+		</script>
 	</head>
 	<body>
 		<h1 id="groupTitle">Group</h1>
