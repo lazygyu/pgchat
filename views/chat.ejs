@@ -44,6 +44,12 @@
 				height:49px;
 				border-top:solid 1px silver;
 			}
+
+			#userInput {
+				width:100%;
+				height:100%;
+				color:black;
+			}
 		</style>
 		<script type="text/javascript">
 
@@ -116,6 +122,9 @@
 			              name.innerHTML = user.name
 			            }
 			          });
+	          		FB.api('/<%= gid %?>', function(gr){
+	          			$("groupTitle").innerHTML = gr.name;
+	          		});
 	              FB.api( 
 	                {
 	                  method: 'fql.query', 
@@ -159,7 +168,7 @@
 		</ul>
 		<div id="chatContainer"></div>
 		<div id="inputContainer">
-			<img id="userIcon" /><span id="username"></span>
+			<img id="userIcon" />
 			<textarea id="userInput"></textarea>
 		</div>
 	</body>
