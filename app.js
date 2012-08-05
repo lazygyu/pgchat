@@ -66,7 +66,7 @@ nowjs.on('connect', function(){
 everyone.now.enter = function(uid, gid){
   members[this.now.clientId].group = gid;
   members[this.now.clientId].uid = uid;
-  nowjs.getGroup(gid).addUser(this.now.clientId);
+  nowjs.getGroup(gid).addUser(this.clientId);
 };
 everyone.now.sendMsg = function(msg){
   var gr = members[this.now.clientId].group;
