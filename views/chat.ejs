@@ -122,7 +122,7 @@
 			              name.innerHTML = user.name
 			            }
 			          });
-	          		FB.api('/<%= gid %?>', function(gr){
+	          		FB.api('/<%= gid %>', function(gr){
 	          			$("groupTitle").innerHTML = gr.name;
 	          		});
 	              FB.api( 
