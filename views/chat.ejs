@@ -59,7 +59,7 @@
 	                  $("groupMemberCount").innerHTML = response.length;
 	                  for(var i=0,l=response.length;i<l;i++){
 	                  	members.push(response[i]);
-	                  	
+
 	                  }
 	                });
 	          	}else if(res.status === 'not_authorized'){
@@ -93,7 +93,7 @@
 		</ul>
 		<div id="chatContainer"></div>
 		<div id="inputContainer">
-			<img id="userIcon" /><span id="username" />
+			<img id="userIcon" /><span id="username"></span>
 			<textarea id="userInput"></textarea>
 		</div>
 	</body>
