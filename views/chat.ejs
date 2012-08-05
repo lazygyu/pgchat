@@ -7,6 +7,31 @@
 
 			var members = [];
 
+			function Member(opt){
+				var uid = opt.uid || 0;
+				var name = opt.name || '';
+				var picture = opt.picture || '';
+				var userid = opt.userid || '';
+				var el = opt.el || makeEl("li");
+				var that = this;
+				that.el = el;
+
+				if( !name && uid ){
+					FB.api('/user/' + uid, function(response){
+						name = response.name;
+						userid = response.id;
+						that.render();
+					});
+				}
+
+				var render = function(){
+					el.innerHTML = '';
+					el.appendChild(makeEl('img', {'src':'https://graph.facebook.com/' + userid + '/picture'}));
+					el.appendChild(makeEl('span', {'class':'username'}, username));
+				}
+				that.render = render;
+			}
+
 			function makeEl(tag, opt, cont){
 	          var tmp = document.createElement(tag);
 	          if( opt ){
@@ -58,9 +83,8 @@
 	                  $("groupMemberCount").innerHTML = response.length;
 	                  var tmp = $("memberList");
 	                  for(var i=0,l=response.length;i<l;i++){
-	                  	members.push(response[i]);
-	                  	var li = makeEl("li", {}, response[i].name);
-	                  	tmp.appendChild(li);
+	                  	members.push(new User(response[i]));
+	                  	tmp.appendChild(members[i].el);
 	                  }
 	                });
 	          	}else if(res.status === 'not_authorized'){
