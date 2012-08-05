@@ -47,7 +47,6 @@
 			              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
 			              var name = document.getElementById('username');
 			              name.innerHTML = user.name
-	                  console.dir(user);
 			            }
 			          });
 	              FB.api( 
@@ -57,9 +56,11 @@
 	                }, 
 	                function(response) { 
 	                  $("groupMemberCount").innerHTML = response.length;
+	                  var tmp = $("memberList");
 	                  for(var i=0,l=response.length;i<l;i++){
 	                  	members.push(response[i]);
-
+	                  	var li = makeEl("li", {}, response[i].name);
+	                  	tmp.appendChild(li);
 	                  }
 	                });
 	          	}else if(res.status === 'not_authorized'){
