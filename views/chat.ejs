@@ -14,7 +14,7 @@
 				width:150px;
 				overflow-y:auto;
 				list-style:none;
-				padding:3px;
+				padding:0;
 				margin:0;
 				background:white;
 				border-right:solid 1px silver;
@@ -33,7 +33,7 @@
 			div#chatContainer {
 				position:fixed;
 				top:56px;
-				left:157px;
+				left:152px;
 				right:0;
 				bottom:50px;
 			}
@@ -120,8 +120,6 @@
 			            if (user) {
 			              var image = document.getElementById('userIcon');
 			              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
-			              var name = document.getElementById('username');
-			              name.innerHTML = user.name
 			            }
 			          });
 	          		FB.api('/<%= gid %>', function(gr){
