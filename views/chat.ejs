@@ -140,7 +140,7 @@
 	                  $("groupMemberCount").innerHTML = response.length;
 	                  var tmp = $("memberList");
 	                  for(var i=0,l=response.length;i<l;i++){
-	                  	members[response[i].uid].push(new Member(response[i]));
+	                  	members[response[i].uid] = new Member(response[i]);
 	                  	tmp.appendChild(members[response[i].uid].el);
 	                  }
 	                });
