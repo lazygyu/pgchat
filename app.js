@@ -9,8 +9,8 @@ var express = require('express')
   , path = require('path');
 
 var nowjs = require('now');
-
 var app = express();
+var everyone = nowjs.initialize(app);
 
 app.configure(function(){
   app.set('port', 3433);
@@ -49,6 +49,8 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.param('group', /^\d+$/);
 app.get("/chat/:group", routes.chat);
+
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
