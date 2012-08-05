@@ -9,5 +9,5 @@ exports.index = function(req, res){
 
 exports.chat = function(req, res){
 	res.render('chat', { gid:req.params.group, title:'FacebookGroupChat' });
-	now.getGroup(req.params.group).addUser(this.now.getClientId());
+	
 }

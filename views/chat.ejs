@@ -65,18 +65,23 @@
 				var el = opt.el || makeEl("li");
 				var that = this;
 				that.el = el;
+				that.picture = picture;
+				that.name = name;
+				that.uid = uid;
+
 
 				if( !name && uid ){
 					FB.api('/' + uid, function(response){
 						name = response.name;
 						userid = response.id;
+						picture = 'https://graph.facebook.com/' + userid + '/picture';
 						that.render();
 					});
 				}
 
 				var render = function(){
 					el.innerHTML = '';
-					el.appendChild(makeEl('img', {'src':'https://graph.facebook.com/' + userid + '/picture'}));
+					el.appendChild(makeEl('img', {'src':picture}));
 					el.appendChild(makeEl('span', {'class':'username'}, name));
 				}
 				that.render = render;
@@ -104,6 +109,7 @@
 	        function $(oid){
 	          return document.getElementById(oid);
 	        }
+
 
 			window.fbAsyncInit = function() {
 	          FB.init({
@@ -134,8 +140,8 @@
 	                  $("groupMemberCount").innerHTML = response.length;
 	                  var tmp = $("memberList");
 	                  for(var i=0,l=response.length;i<l;i++){
-	                  	members.push(new Member(response[i]));
-	                  	tmp.appendChild(members[i].el);
+	                  	members[response[i].uid].push(new Member(response[i]));
+	                  	tmp.appendChild(members[response[i].uid].el);
 	                  }
 	                });
 	          	}else if(res.status === 'not_authorized'){
@@ -156,6 +162,23 @@
 	           js.src = "//connect.facebook.net/en_US/all.js";
 	           ref.parentNode.insertBefore(js, ref);
 	         }(document));
+
+	        now.ready(function(){
+	        	now.enter('<%= gid %>');
+	        	now.recieveMsg = function(uid, msg){
+	        		var mem = members[uid];
+	        		if(!mem) return;
+	        		var cont = makeEl('p', {'class':'chatMessage'});
+	        		var img = makeEl('img', {'src':mem.picture});
+	        		var nm = makeEl('span', {'class':'username'}, mem.name);
+	        		var message = makeEl('div', {'class':'chatMessage'}, msg.replace(/\</g, "&lt;"));
+	        		cont.appendChild(img);
+	        		cont.appendChild(nm);
+	        		cont.appendChild(message);
+	        		var ch = $("chatContainer");
+	        		ch.appendChild(cont);
+	        	}
+	        });
 		</script>
 		<script type="text/javascript" src="http://fbchat.lazygyu.net:3433/nowjs/now.js"></script>
 	</head>

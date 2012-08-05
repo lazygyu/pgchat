@@ -11,6 +11,8 @@ var express = require('express')
 var nowjs = require('now');
 var app = express();
 
+var members = [];
+
 
 app.configure(function(){
   app.set('port', 3433);
@@ -57,3 +59,19 @@ serv.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 var everyone = nowjs.initialize(serv);
+
+nowjs.on('connect', function(){
+  members[this.now.clientId] = { };
+});
+everyone.now.enter = function(uid, gid){
+  members[this.now.clientId].group = gid;
+  members[this.now.clientId].uid = uid;
+  nowjs.getGroup(gid).addUser(this.now.clientId);
+};
+everyone.now.sendMsg = function(msg){
+  var gr = members[this.now.clientId].group;
+  if( !gr ) return;
+  var group = nowjs.getGroup(gr);
+  group.now.recieveMsg(members[this.now.clientId].uid, msg);
+}
+
