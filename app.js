@@ -10,7 +10,7 @@ var express = require('express')
 
 var nowjs = require('now');
 var app = express();
-var everyone = nowjs.initialize(app);
+
 
 app.configure(function(){
   app.set('port', 3433);
@@ -52,6 +52,8 @@ app.get("/chat/:group", routes.chat);
 
 
 
-http.createServer(app).listen(app.get('port'), function(){
+var serv = http.createServer(app);
+serv.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
+var everyone = nowjs.initialize(serv);
