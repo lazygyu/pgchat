@@ -41,7 +41,6 @@
 
 	          FB.getLoginStatus(function(res){
 	          	if( res.status === 'connected'){
-	          		document.getElementById('afterLogin').style.display = 'block';
 	          		FB.api('/me', function(user) {
 			            if (user) {
 			              var image = document.getElementById('userIcon');
@@ -63,9 +62,11 @@
 	                  }
 	                });
 	          	}else if(res.status === 'not_authorized'){
-	          		document.getElementById('beforeLogin').style.display = 'block';
+	          		alert("그룹채팅을 하려면 먼저 페이스북 계정을 연동하랑께요");
+	          		FB.login();
 	          	}else{
-	          		document.getElementById('beforeLogin').style.display = 'block';
+	          		alert("일단 페이스북 로그인을 먼저 해야 한당게요");
+	          		FB.login();
 	          	}
 	          });
 	        };
