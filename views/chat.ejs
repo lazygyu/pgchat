@@ -56,9 +56,10 @@
 	                  query: 'SELECT gid, uid FROM group_member WHERE gid = <%= gid %>' 
 	                }, 
 	                function(response) { 
+	                  $("groupMemberCount").innerHTML = response.length;
 	                  for(var i=0,l=response.length;i<l;i++){
 	                  	members.push(response[i]);
-	                  	makeEl
+	                  	
 	                  }
 	                });
 	          	}else if(res.status === 'not_authorized'){
@@ -92,7 +93,7 @@
 		</ul>
 		<div id="chatContainer"></div>
 		<div id="inputContainer">
-			<img id="userIcon" />
+			<img id="userIcon" /><span id="username" />
 			<textarea id="userInput"></textarea>
 		</div>
 	</body>
