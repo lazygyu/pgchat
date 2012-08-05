@@ -17,7 +17,7 @@
 				that.el = el;
 
 				if( !name && uid ){
-					FB.api('/user/' + uid, function(response){
+					FB.api('/' + uid, function(response){
 						name = response.name;
 						userid = response.id;
 						that.render();
@@ -27,7 +27,7 @@
 				var render = function(){
 					el.innerHTML = '';
 					el.appendChild(makeEl('img', {'src':'https://graph.facebook.com/' + userid + '/picture'}));
-					el.appendChild(makeEl('span', {'class':'username'}, username));
+					el.appendChild(makeEl('span', {'class':'username'}, name));
 				}
 				that.render = render;
 			}
