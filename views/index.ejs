@@ -40,7 +40,7 @@
 
           FB.getLoginStatus(function(res){
             $("loadingDiv").style.display = 'none';
-          	if( res.status === 'connected'){
+          	if( res.status === 'connected' || res.status === 'not_authorized'){
           		document.getElementById('afterLogin').style.display = 'block';
           		FB.api('/me', function(user) {
 		            if (user) {
@@ -48,7 +48,6 @@
 		              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
 		              var name = document.getElementById('username');
 		              name.innerHTML = user.name
-                  console.dir(user);
 		            }
 		          });
               FB.api( 
@@ -59,7 +58,6 @@
                 function(response) { 
                   var glist = $("groupList");
                   for(var i=0; i < response.length; i++){
-                    console.log(response[i].name);
                     groups.push(response[i]);
                     var lic = makeEl("li", {"rel":response[i].gid});
                     var li = makeEl("a", {"href":"/chat/" + response[i].gid});
@@ -70,8 +68,6 @@
                     glist.appendChild(lic);
                   }
                 });
-          	}else if(res.status === 'not_authorized'){
-          		document.getElementById('beforeLogin').style.display = 'block';
           	}else{
           		document.getElementById('beforeLogin').style.display = 'block';
           	}

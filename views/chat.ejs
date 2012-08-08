@@ -25,6 +25,12 @@
 				margin:0;
 				background:white;
 			}
+
+			ul#memberList>li.online{
+				color:white;
+				font-weight:bold;
+				background:#369;
+			}
 			ul#memberList>li>img{
 				width:15px;
 				height:15px;
@@ -36,6 +42,7 @@
 				left:152px;
 				right:0;
 				bottom:50px;
+				overflow-y:auto;
 			}
 
 			div#inputContainer{
@@ -48,43 +55,108 @@
 			}
 
 			#userInput {
-				width:100%;
-				height:100%;
 				color:black;
+				border:solid 1px blue;
+				position:fixed;
+				left:201px;
+				right:0;
+				bottom:0;
+				hegiht:50px;
 			}
+
+			p.chatMessage {
+				padding:2px;
+				border-bottom:solid 1px #dedede;
+				overflow:hidden;
+			}
+
+			p.chatMessage>img.userIcon {
+				width:32px;
+				hegiht:32px;
+				vertical-align:text-top;
+				float:left;
+			}
+
+			p.chatMessage>span.username{
+				font-weight:bold;
+				padding-left:7px;
+			}
+
+			p.chatMessage>div.chatMessage{
+				padding-left:50px;
+				padding-top:.2em;
+			}
+			span.timestamp {
+				color:#acf;
+				font-size:8pt;
+				padding-left:1em;
+			}
+
+			div.previewDiv {
+				padding-left:5em;
+				font-size:8pt;
+			}
+
+			.previewTitle { font-weight:bold;}
+			.previewDesc { color:#ac9; }
+			.previewAuthor { color:black; }
+
+
 		</style>
 		<script type="text/javascript">
 
 			var members = [];
 			var me = {};
+			var scrolling = true;
+
+			function scroll(offset){
+				if( !scrolling ) return;
+				if( !offset ) offset = 40;
+				var ch = $("chatContainer");
+				if( ch.scrollTop < ch.scrollHeight - ch.clientHeight - offset ) return;
+				$("chatContainer").scrollTop = $("chatContainer").scrollHeight;
+			}
 
 			function Member(opt){
 				var uid = opt.uid || 0;
 				var name = opt.name || '';
 				var picture = opt.picture || '';
-				var userid = opt.userid || '';
-				var el = opt.el || makeEl("li");
+				var userid = opt.username || '';
+				var el = opt.el || makeEl("li", {"id":"user_" + opt.uid});
 				var that = this;
 				that.el = el;
 				that.picture = picture;
 				that.name = name;
 				that.uid = uid;
+				var _isLogedIn = false;
+				Object.defineProperty(this, "isLogin", {
+					"get":function(){ return _isLogedIn; },
+					"set":function(v){ 
+						_isLogedIn = v; 
+						if( v ){
+							if( that.el.className.indexOf('online') == -1 ){
+								that.el.className += ' online';
+							}
+						}else{
+							that.el.className = that.el.className.replace(/online/g, '');
+						}
+					}
+				});
 
 
 				if( !name && uid ){
 					FB.api('/' + uid, function(response){
-						name = response.name;
-						userid = response.id;
-						me.uid = response.uid;
-						picture = 'https://graph.facebook.com/' + userid + '/picture';
+						that.name = response.name;
+						that.userid = response.id;
+						that.picture = 'https://graph.facebook.com/' + that.userid + '/picture';
 						that.render();
 					});
 				}
 
 				var render = function(){
 					el.innerHTML = '';
-					el.appendChild(makeEl('img', {'src':picture}));
-					el.appendChild(makeEl('span', {'class':'username'}, name));
+					el.appendChild(makeEl('img', {'src':that.picture}));
+					el.appendChild(makeEl('span', {'class':'username'}, that.name));
 				}
 				that.render = render;
 			}
@@ -128,6 +200,7 @@
 			            if (user) {
 			              var image = document.getElementById('userIcon');
 			              image.src = 'https://graph.facebook.com/' + user.id + '/picture';
+				      me.uid = user.id;
 			            }
 			          });
 	          		FB.api('/<%= gid %>', function(gr){
@@ -167,22 +240,91 @@
 		</script>
 		<script type="text/javascript" src="http://fbchat.lazygyu.net:3433/nowjs/now.js"></script>
 		<script type="text/javascript">
-			now.recieveMsg = function(uid, msg){
-        		var mem = members[uid];
-        		if(!mem) return;
-        		var cont = makeEl('p', {'class':'chatMessage'});
-        		var img = makeEl('img', {'src':mem.picture});
-        		var nm = makeEl('span', {'class':'username'}, mem.name);
-        		var message = makeEl('div', {'class':'chatMessage'}, msg.replace(/\</g, "&lt;"));
-        		cont.appendChild(img);
-        		cont.appendChild(nm);
-        		cont.appendChild(message);
-        		var ch = $("chatContainer");
-        		ch.appendChild(cont);
-        	}
+			var msgCnt = 0;
+
+			now.userLogin = function(uid){
+				members[uid].isLogin = true;
+			}
+
+			now.userLogout = function(uid){
+				members[uid].isLogin = false;
+			}
+			
+			now.makePreview = function(data, tar){
+				if( data == null ) return;
+				if( typeof data == "string" ) data = eval("(" + data + ")");
+				var that = $(tar);
+				var title = data.title;
+				var desc = data.description;
+				var thumb = data.thumbnail_url;
+				var author = data.author_name;
+				var html = data.html;
+
+				var ch = $("chatContainer");
+
+				var tmph_old = ch.scrollHeight;
+
+				var cont = makeEl("div", {"class":"previewDiv"});
+				cont.appendChild( makeEl("div", {"class":"previewTitle"}, title) );
+				cont.appendChild( makeEl("p", {"class":"previewDescription"}, desc) );
+				cont.appendChild( makeEl("span", {"class":"previewAuthor"}, author) );
+				cont.appendChild( makeEl("div", {"class":"preview"}, html) );
+				that.appendChild(cont);
+				scroll(ch.scrollHeight - tmph_old);
+			}
+
+			now.recieveMsg = function(uid, msg, ts){
+				var mem = members[uid];
+				if(!mem) return;
+				var cont = makeEl('p', {'class':'chatMessage', 'id':'msg_' + (msgCnt++)});
+				var img = makeEl('img', {'src':mem.picture, 'class':'userIcon'});
+				var tss = makeEl('span', {'class':'timestamp'},  ts);
+				var nm = makeEl('span', {'class':'username'}, mem.name);
+				var msg = msg.replace(/\</g, "&lt;").replace(/\n/g, "<br />");
+				var urlReg = /((http|https|ftp|magnet):[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=\|]*)?)/gi;
+				var matches = msg.match(urlReg);
+				if(matches && matches.length > 0 ){
+					for(var i=0,node;node=matches[i++];){
+						cont.className += ' wbp';
+						msg = msg.replace(node, "<a href='" + node + "' rel='external' onclick='window.open(this.href); return false;'>" + node + "</a>");
+						now.parseUrl(node, cont.id);
+					}
+				}
+				//msg = msg.replace(urlReg, "<a href='$1'>$1</a>");
+				var message = makeEl('div', {'class':'chatMessage'}, msg);
+				cont.appendChild(img);
+				cont.appendChild(nm);
+				cont.appendChild(tss);
+				cont.appendChild(message);
+				var ch = $("chatContainer");
+				var oldh = ch.scrollHeight;
+				ch.appendChild(cont);
+				scroll(ch.scrollHeight - oldh);
+			}
+		
+		function enter(){
+			if(me.uid)
+				now.enter(me.uid, '<%= gid %>');
+			else
+				setTimeout(enter, 100);
+		}
+
+		function procMsg(event){
+			if( event.keyCode == 13 && !event.shiftKey ){
+				var txt = $("userInput").value;
+				txt = txt.replace(/^\s+|\s+$/g, '');
+				if(txt.length == 0 ) return;
+				now.sendMsg(txt);
+				$("userInput").value = '';
+				return false;
+			}else{
+				return true;
+			}
+		}
+
 	        now.ready(function(){
-	        	now.enter(me.uid, '<%= gid %>');
-	        	
+			enter();
+			$("userInput").focus();
 	        });
 		</script>
 	</head>
@@ -196,7 +338,7 @@
 		<div id="chatContainer"></div>
 		<div id="inputContainer">
 			<img id="userIcon" />
-			<textarea id="userInput"></textarea>
+			<textarea id="userInput" onkeydown="return procMsg(event);"></textarea>
 		</div>
 	</body>
 </html>
